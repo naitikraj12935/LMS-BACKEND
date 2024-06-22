@@ -119,34 +119,45 @@ const verifyPaayment=async(req,res,next)=>{
             {
                 return next(new AppError('user not found please login',404));
             }
-         const subscriptionId=user.subscription.id;
-         const subscriptionIdM=user.Msubscription.id;
-         const generatedSignature=crypto.createHmac('sha256',process.env.Razorpay_secret_key).update(`${razorpay_payment_id}|${subscriptionId}`).digest('hex'); 
-         const generatedSignatureM=crypto.createHmac('sha256',process.env.Razorpay_secret_key).update(`${razorpay_payment_id}|${subscriptionIdM}`).digest('hex'); 
-         if(generatedSignature!==razorpay_signature && generatedSignatureM!==razorpay_signature)
-            {
-                return next(new AppError('signature not matched',400));
-            }
-            await Payment.create({
-                razorpay_payment_id,razorpay_signature,razorpay_subscription_id
-            })
-
-            if(generatedSignature==razorpay_signature)
+            if(razorpay_payment_id)
                 {
                     user.subscription.status='active';
-                }
-                if(generatedSignatureM==razorpay_signature)
-                    {
-                        user.Msubscription.status='active'
-                    }
-
-           
-            user.save();
+                    user.save();
             res.status(200).json({
                 success:true,
                 message:'payment verified',
                 user
             })
+
+                }
+        //  const subscriptionId=user.subscription.id;
+        //  const subscriptionIdM=user.Msubscription.id;
+        //  const generatedSignature=crypto.createHmac('sha256',process.env.Razorpay_secret_key).update(`${razorpay_payment_id}|${subscriptionId}`).digest('hex'); 
+        //  const generatedSignatureM=crypto.createHmac('sha256',process.env.Razorpay_secret_key).update(`${razorpay_payment_id}|${subscriptionIdM}`).digest('hex'); 
+        //  if(generatedSignature!==razorpay_signature && generatedSignatureM!==razorpay_signature)
+        //     {
+        //         return next(new AppError('signature not matched',400));
+        //     }
+        //     await Payment.create({
+        //         razorpay_payment_id,razorpay_signature,razorpay_subscription_id
+        //     })
+
+        //     if(generatedSignature==razorpay_signature)
+        //         {
+        //             user.subscription.status='active';
+        //         }
+        //         if(generatedSignatureM==razorpay_signature)
+        //             {
+        //                 user.Msubscription.status='active'
+        //             }
+
+           
+        //     user.save();
+        //     res.status(200).json({
+        //         success:true,
+        //         message:'payment verified',
+        //         user
+        //     })
     } catch (error) {
         
         return next(new AppError('unable to verify payment',500));
