@@ -190,7 +190,7 @@ const forgetPassword = async (req, res, next) => {
     console.log(resetToken);
 
     await user.save();
-    const resetPasswordURL = 'https://coursify1.netlify.app/reset-password/${resetToken}';
+    const resetPasswordURL = `https://coursify1.netlify.app/reset-password/${resetToken}`;
 
     await sendEmail(email, resetPasswordURL, "update your password");
 
