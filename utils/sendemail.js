@@ -7,7 +7,7 @@ const sendEmail = async function(email, subject, message) {
         secure: true, // Use SSL/TLS
         auth: {
             user: 'naitikraj12935@gmail.com',
-            pass: 'xtvvbbvluorjcsnw'
+            pass: 'ejtavzqacrlyrqex'
         }
     });
 
